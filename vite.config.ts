@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react-swc'
 import path from 'path'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import viteCompression from 'vite-plugin-compression'
-import UnoCSS from 'unocss/vite'
 
 // https://vite.dev/config/
 export default defineConfig((config: ConfigEnv): UserConfig => {
@@ -20,7 +19,6 @@ export default defineConfig((config: ConfigEnv): UserConfig => {
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
     },
     plugins: [
-      UnoCSS(),
       react(),
       createHtmlPlugin({
         inject: {

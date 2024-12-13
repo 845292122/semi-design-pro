@@ -1,12 +1,34 @@
 import { Outlet } from 'react-router-dom'
+import { Layout } from '@douyinfe/semi-ui'
+import styled from 'styled-components'
+import AppSider from './components/AppSider'
+import AppHeader from './components/AppHeader'
 
-const Layout = () => {
+const StyledLayout = styled(Layout)`
+  height: 100%;
+  display: flex;
+`
+
+const AppLayout = () => {
+  const { Content } = Layout
   return (
-    <div>
-      <h1>header</h1>
-      <Outlet />
-    </div>
+    <StyledLayout>
+      <AppSider />
+      <Layout style={{ flex: 1 }}>
+        <AppHeader />
+        <Content
+          style={{
+            padding: '24px',
+            backgroundColor: 'var(--semi-color-bg-0)'
+          }}
+        >
+          <div>
+            <Outlet />
+          </div>
+        </Content>
+      </Layout>
+    </StyledLayout>
   )
 }
 
-export default Layout
+export default AppLayout
