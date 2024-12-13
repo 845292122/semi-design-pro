@@ -17,13 +17,7 @@ export default defineConfig({
   shortcuts: [
     ['wh-full', 'w-full h-full'],
     ['f-c-c', 'flex justify-center items-center'],
-    ['flex-col', 'flex flex-col'],
-    ['text-ellipsis', 'truncate'],
-    ['auto-bg-hover', 'hover:bg-#eaf0f1 hover:dark:bg-#1b2429'],
-    [
-      'icon-btn',
-      'text-16 inline-block cursor-pointer select-none opacity-75 transition duration-200 ease-in-out hover:opacity-100 hover:text-primary !outline-none'
-    ]
+    ['flex-col', 'flex flex-col']
   ],
   rules: [
     [/^m-([\.\d]+)$/, ([_, num]) => ({ margin: `${num}px` })],
