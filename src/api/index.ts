@@ -1,3 +1,4 @@
+import { Notification } from '@douyinfe/semi-ui'
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { useAtomValue } from 'jotai'
 import { tokenAtom } from '~/store'
@@ -59,7 +60,11 @@ service.interceptors.response.use(
     } else if (message.includes('Request failed with status code')) {
       message = '系统接口' + message.substr(message.length - 3) + '异常'
     }
-    // TODO: 弹窗显示错误
+    Notification.error({
+      title: '错误',
+      content: message,
+      duration: 5
+    })
     return Promise.reject(error)
   }
 )
