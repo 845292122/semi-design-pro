@@ -14,6 +14,8 @@
     "@douyinfe/semi-icons": "^2.71.2",
     "@douyinfe/semi-icons-lab": "^2.71.2",
     "@douyinfe/semi-ui": "^2.71.2",
+    "@visactor/react-vchart": "^1.13.1",
+    "@visactor/vchart-semi-theme": "^1.12.2",
     "axios": "^1.7.7",
     "immer": "^10.1.1",
     "jotai": "^2.10.3",

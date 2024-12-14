@@ -8,9 +8,9 @@
 - [x] 全局状态
 - [x] axios配置
 - [x] 整合unocss
-- [ ] 图表
-- [ ] profile
-- [ ] 登录页面
+- [x] 图表
+- [x] profile
+- [x] 登录页面
 
 ## 组件规范
 
