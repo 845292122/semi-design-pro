@@ -1,5 +1,5 @@
 import { Nav, Button, Avatar, Layout, Dropdown, Typography } from '@douyinfe/semi-ui'
-import { IconBell, IconChevronUpDown, IconExit, IconHelpCircle, IconKey, IconQuit, IconUserSetting } from '@douyinfe/semi-icons'
+import { IconBell, IconChevronUpDown, IconExit, IconHelpCircle, IconKey, IconUserSetting } from '@douyinfe/semi-icons'
 import styled from 'styled-components'
 import { useRouteMeta } from '~/hooks'
 
