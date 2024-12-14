@@ -1,10 +1,10 @@
 import { Layout, Nav } from '@douyinfe/semi-ui'
-import { IconSemiLogo } from '@douyinfe/semi-icons'
 import { bizRoutes, RouteType } from '~/router'
 import React, { useEffect, useState } from 'react'
 import { useAtomValue } from 'jotai'
 import { permissionsAtom } from '~/store'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { IconToken } from '@douyinfe/semi-icons-lab'
 
 type NavItem = {
   itemKey: string | undefined
@@ -92,8 +92,11 @@ export default function AppSider() {
         onClick={clickMenu}
         items={menuItems}
         header={{
-          logo: <IconSemiLogo style={{ fontSize: 36 }} />,
-          text: 'Semi Design'
+          logo: <IconToken style={{ fontSize: 26, marginTop: '12px' }} />,
+          text: '后台管理系统',
+          style: {
+            height: '60px'
+          }
         }}
         footer={{
           collapseButton: true

@@ -3,6 +3,7 @@ import { RouteType } from '..'
 import lazyLoad from '../helper/lazyLoad'
 import React from 'react'
 import { IconTreeSelect } from '@douyinfe/semi-icons-lab'
+import { IconRadio } from '@douyinfe/semi-icons'
 
 const SystemRoutes: Array<RouteType> = [
   {
@@ -21,6 +22,7 @@ const SystemRoutes: Array<RouteType> = [
         meta: {
           key: 'system:user',
           title: '用户管理',
+          icon: <IconRadio />,
           requireAuth: true,
           permission: 'system:user'
         }
@@ -31,6 +33,7 @@ const SystemRoutes: Array<RouteType> = [
         meta: {
           key: 'system:role',
           title: '角色管理',
+          icon: <IconRadio />,
           requireAuth: true,
           permission: 'system:role'
         }
@@ -41,6 +44,7 @@ const SystemRoutes: Array<RouteType> = [
         meta: {
           key: 'system:tenant',
           title: '租户管理',
+          icon: <IconRadio />,
           requireAuth: true,
           permission: 'system:tenant'
         }
