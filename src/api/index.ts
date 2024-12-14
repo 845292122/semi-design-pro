@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
-import { useAuthStore } from '~/store'
+// import {  } from '~/store'
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL
@@ -11,10 +11,11 @@ const service = axios.create({
  */
 service.interceptors.request.use(
   (request: InternalAxiosRequestConfig) => {
-    const token = useAuthStore.getState().token
-    if (token) {
-      request.headers['Authorization'] = token
-    }
+    // TODO: 获取token
+    // const token = useAuthStore.getState().token
+    // if (token) {
+    //   request.headers['Authorization'] = token
+    // }
 
     return request
   },
@@ -70,4 +71,4 @@ export default service
 /**
  * 导出api模块
  */
-export * from './auth.api'
+export * from './modules/auth'

@@ -18,8 +18,7 @@ const AppLayout = () => {
         <AppHeader />
         <Content
           style={{
-            padding: '24px',
-            backgroundColor: 'var(--semi-color-bg-0)'
+            padding: '24px'
           }}
         >
           <div>

@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { routes, RouteType } from '..'
 import { useAtomValue } from 'jotai'
-import { permissionsAtom, tokenAtom } from '~/store/auth.store'
+import { permissionsAtom, tokenAtom } from '~/store/modules/auth'
 
 function findRoute(pathname: string, routes: Array<RouteType> = []): RouteType {
   let result: RouteType = {}

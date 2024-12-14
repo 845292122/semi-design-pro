@@ -1,2 +1,2 @@
-export * from './auth.store'
-export * from './app.store'
+export * from './modules/auth'
+export * from './modules/app'

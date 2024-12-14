@@ -3,7 +3,7 @@ import Layout from '~/layout'
 import lazyLoad from '../helper/lazyLoad'
 import { RouteType } from '..'
 
-const errorRoutes: Array<RouteType> = [
+const ErrorRoutes: Array<RouteType> = [
   {
     element: <Layout />,
     children: [
@@ -13,6 +13,7 @@ const errorRoutes: Array<RouteType> = [
         meta: {
           title: '未授权',
           key: '403',
+          hidden: true,
           requireAuth: true
         }
       },
@@ -21,6 +22,7 @@ const errorRoutes: Array<RouteType> = [
         element: lazyLoad(React.lazy(() => import('~/pages/error/404'))),
         meta: {
           title: '页面飞走了~',
+          hidden: true,
           key: '404'
         }
       }
@@ -28,4 +30,4 @@ const errorRoutes: Array<RouteType> = [
   }
 ]
 
-export default errorRoutes
+export default ErrorRoutes

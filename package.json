@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@douyinfe/semi-icons": "^2.71.2",
+    "@douyinfe/semi-icons-lab": "^2.71.2",
     "@douyinfe/semi-ui": "^2.71.2",
     "axios": "^1.7.7",
     "immer": "^10.1.1",

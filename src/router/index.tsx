@@ -1,9 +1,12 @@
 import Login from '~/pages/login'
 import { Navigate, useRoutes } from 'react-router-dom'
+import React from 'react'
 
 export type RouteMetaType = {
   title: string
-  key?: string
+  key: string
+  icon?: React.ReactNode
+  hidden?: boolean
   requireAuth?: boolean
   permission?: string
 }
