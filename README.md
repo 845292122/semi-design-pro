@@ -8,9 +8,6 @@
 - [x] 全局状态
 - [x] axios配置
 - [x] 整合unocss
-- [ ] zustand改jotai
-- [ ] 修改路由认证为loader
-- [ ] 整合swr
 
 ## 组件规范
 
