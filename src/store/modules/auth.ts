@@ -8,7 +8,9 @@ const permissionsAtom = atomWithStorage<Array<string>>('permissions-atom', [
   'system',
   'system:user',
   'system:role',
-  'system:tenant'
+  'system:tenant',
+  'test',
+  'system:test'
 ])
 
 export { tokenAtom, userInfoAtom, permissionsAtom }

@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { IconToken } from '@douyinfe/semi-icons-lab'
 
 type NavItem = {
-  itemKey: string | undefined
+  itemKey: string
   text: string
   icon?: React.ReactNode
   items?: NavItem[]
@@ -19,25 +19,18 @@ export default function AppSider() {
   const permissions = useAtomValue(permissionsAtom)
   const [defautlKeys, setDefaultKeys] = useState<string[]>([pathname])
   const [menuItems, setMenuItems] = useState<NavItem[]>([])
-  const [openKeys, setOpenKeys] = useState<(string | number)[]>([])
 
-  const clickMenu = ({ itemKey }: { itemKey?: string | number; domEvent?: MouseEvent; isOpen?: boolean }) => {
-    if (itemKey) {
-      navigate(itemKey.toString())
-    }
-  }
-
-  const menuChange = (data: {
+  const clickMenu = (data: {
     itemKey?: string | number
-    openKeys?: (string | number)[]
     domEvent?: MouseEvent
     isOpen?: boolean
-  }): void | undefined => {
-    const { itemKey, isOpen } = data
-    if (isOpen) {
-      setOpenKeys([itemKey!])
+    openKeys?: (string | number)[]
+  }) => {
+    const { itemKey = '/', openKeys } = data
+    if (openKeys) {
+      return
     } else {
-      setOpenKeys([])
+      navigate(itemKey.toString())
     }
   }
 
@@ -53,7 +46,7 @@ export default function AppSider() {
           if (filteredChildren.length > 0 && route.meta?.key) {
             return [
               {
-                itemKey: route.path,
+                itemKey: route.path ?? route.meta?.key ?? '/',
                 text: route.meta.title,
                 icon: route.meta.icon,
                 items: filteredChildren
@@ -68,7 +61,7 @@ export default function AppSider() {
         ) {
           return [
             {
-              itemKey: route.path,
+              itemKey: route.path ?? route.meta?.key ?? '/',
               text: route.meta!.title,
               icon: route.meta?.icon
             }
@@ -87,8 +80,6 @@ export default function AppSider() {
       <Nav
         defaultSelectedKeys={defautlKeys}
         style={{ maxWidth: 220, height: '100%' }}
-        openKeys={openKeys}
-        onOpenChange={menuChange}
         onClick={clickMenu}
         items={menuItems}
         header={{
