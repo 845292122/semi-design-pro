@@ -62,17 +62,6 @@ const bizRoutes: RouteType.RouteInfo[] = [
         }
       },
       {
-        path: '/system/role',
-        element: lazyLoad(React.lazy(() => import('~/pages/system/role'))),
-        meta: {
-          key: 'system:role',
-          title: '角色管理',
-          icon: <IconRadio />,
-          requireAuth: true,
-          permission: 'system:role'
-        }
-      },
-      {
         path: '/system/tenant',
         element: lazyLoad(React.lazy(() => import('~/pages/system/tenant'))),
         meta: {
