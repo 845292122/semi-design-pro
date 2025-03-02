@@ -1,5 +1,4 @@
 import { Layout, Nav } from '@douyinfe/semi-ui'
-import { RouteType } from '~/router'
 import React, { useEffect, useState } from 'react'
 import { useAtomValue } from 'jotai'
 import { authJotai } from '~/store'
@@ -40,7 +39,7 @@ export default function AppSider() {
   }, [pathname])
 
   useEffect(() => {
-    const filterAndConvertRoutesByPermissions = (routes: RouteType[], permissions: string[]): NavItem[] => {
+    const filterAndConvertRoutesByPermissions = (routes: RouteType.RouteInfo[], permissions: string[]): NavItem[] => {
       return routes.flatMap(route => {
         if (route.children) {
           const filteredChildren = filterAndConvertRoutesByPermissions(route.children, permissions)

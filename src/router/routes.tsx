@@ -1,12 +1,11 @@
 import Home from '~/pages/home'
-import { RouteType } from '.'
 import { IconBanner, IconTreeSelect } from '@douyinfe/semi-icons-lab'
 import AppLayout from '~/layout'
 import React from 'react'
 import lazyLoad from './helper/lazyLoad'
 import { IconRadio } from '@douyinfe/semi-icons'
 
-const bizRoutes: RouteType[] = [
+const bizRoutes: RouteType.RouteInfo[] = [
   // * 基础路由
   {
     element: <AppLayout />,

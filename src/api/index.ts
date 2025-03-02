@@ -1,7 +1,7 @@
 import { Notification } from '@douyinfe/semi-ui'
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { useAtomValue } from 'jotai'
-import { tokenAtom } from '~/store'
+import { authJotai } from '~/store'
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL
@@ -13,7 +13,7 @@ const service = axios.create({
  */
 service.interceptors.request.use(
   (request: InternalAxiosRequestConfig) => {
-    const token = useAtomValue(tokenAtom)
+    const token = useAtomValue(authJotai.tokenAtom)
     if (token) {
       request.headers['Authorization'] = token
     }

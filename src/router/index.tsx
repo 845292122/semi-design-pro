@@ -1,25 +1,8 @@
 import Login from '~/pages/login'
 import { Navigate, useRoutes } from 'react-router-dom'
-import React from 'react'
 import bizRoutes from './routes'
 
-export type RouteMetaType = {
-  title: string
-  key: string
-  icon?: React.ReactNode
-  hidden?: boolean
-  requireAuth?: boolean
-  permission?: string
-}
-
-export type RouteType = {
-  path?: string
-  element?: React.ReactNode
-  meta?: RouteMetaType
-  children?: RouteType[]
-}
-
-export const routes: RouteType[] = [
+export const routes: RouteType.RouteInfo[] = [
   {
     path: '/login',
     element: <Login />,
