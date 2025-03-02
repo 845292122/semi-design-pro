@@ -1,8 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { routes, RouteType } from '..'
 import { useAtomValue } from 'jotai'
-import { permissionsAtom, tokenAtom } from '~/store/modules/auth'
-
+import { authJotai } from '~/store'
 export function findRoute(pathname: string, routes: Array<RouteType> = []): RouteType {
   let result: RouteType = {}
   for (const route of routes) {
@@ -19,8 +18,8 @@ export function findRoute(pathname: string, routes: Array<RouteType> = []): Rout
  * * 路由守卫 (授权认证校验)
  */
 const AuthRouter = ({ children }: { children: JSX.Element }) => {
-  const token = useAtomValue(tokenAtom)
-  const permissions = useAtomValue(permissionsAtom)
+  const token = useAtomValue(authJotai.tokenAtom)
+  const permissions = useAtomValue(authJotai.permissionsAtom)
 
   // * 找到当前路由的 meta 信息
   const { pathname } = useLocation()

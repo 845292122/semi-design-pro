@@ -1,10 +1,11 @@
 import { Layout, Nav } from '@douyinfe/semi-ui'
-import { bizRoutes, RouteType } from '~/router'
+import { RouteType } from '~/router'
 import React, { useEffect, useState } from 'react'
 import { useAtomValue } from 'jotai'
-import { permissionsAtom } from '~/store'
+import { authJotai } from '~/store'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { IconToken } from '@douyinfe/semi-icons-lab'
+import bizRoutes from '~/router/routes'
 
 type NavItem = {
   itemKey: string
@@ -16,7 +17,7 @@ type NavItem = {
 export default function AppSider() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const permissions = useAtomValue(permissionsAtom)
+  const permissions = useAtomValue(authJotai.permissionsAtom)
   const [defautlKeys, setDefaultKeys] = useState<string[]>([pathname])
   const [menuItems, setMenuItems] = useState<NavItem[]>([])
 

@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router-dom'
-import { bizRoutes, RouteMetaType } from '~/router'
+import { RouteMetaType } from '~/router'
 import { findRoute } from '~/router/helper/authRouter'
+import bizRoutes from '~/router/routes'
 
 export const useRouteMeta = (): RouteMetaType => {
   const { pathname } = useLocation()

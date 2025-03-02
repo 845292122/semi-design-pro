@@ -13,4 +13,8 @@ const permissionsAtom = atomWithStorage<Array<string>>('permissions-atom', [
   'system:test'
 ])
 
-export { tokenAtom, userInfoAtom, permissionsAtom }
+export const authJotai = {
+  tokenAtom,
+  userInfoAtom,
+  permissionsAtom
+}

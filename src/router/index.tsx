@@ -1,6 +1,7 @@
 import Login from '~/pages/login'
 import { Navigate, useRoutes } from 'react-router-dom'
 import React from 'react'
+import bizRoutes from './routes'
 
 export type RouteMetaType = {
   title: string
@@ -17,22 +18,6 @@ export type RouteType = {
   meta?: RouteMetaType
   children?: RouteType[]
 }
-
-// * 导入路由
-const metaRoutes = import.meta.glob('./modules/*.tsx', { eager: true })
-
-// * 读取路由到bizRoutes
-export const bizRoutes: Array<RouteType> = []
-Object.keys(metaRoutes).forEach(item => {
-  const routes = metaRoutes[item] as Record<string, unknown>
-  if (typeof routes === 'object' && routes !== null) {
-    Object.keys(routes).forEach((key: string) => {
-      if (Array.isArray(routes[key])) {
-        bizRoutes.push(...(routes[key] as RouteType[]))
-      }
-    })
-  }
-})
 
 export const routes: RouteType[] = [
   {

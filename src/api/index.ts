@@ -76,4 +76,4 @@ export default service
 /**
  * 导出api模块
  */
-export * from './modules/auth'
+export * from './auth.api'
