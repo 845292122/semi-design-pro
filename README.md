@@ -1,4 +1,4 @@
-# React Template
+# Semi Design Pro
 
 ## TODO
 
