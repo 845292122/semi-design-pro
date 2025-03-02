@@ -15,8 +15,10 @@ export default function LoginForm() {
         type="password"
         placeholder="请输入密码"
       />
-      <Checkbox type="default">保持登录</Checkbox>
-      <Button theme="solid" style={{ width: '100%', marginTop: '7px', marginBottom: '15px' }}>
+      <Checkbox type="default" style={{ marginTop: '7px' }}>
+        保持登录
+      </Checkbox>
+      <Button theme="solid" block style={{ marginTop: '7px', marginBottom: '15px' }}>
         登录
       </Button>
       <Divider margin="10px">其他登录方式</Divider>
