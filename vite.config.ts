@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react-swc'
 import path from 'path'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import viteCompression from 'vite-plugin-compression'
+import { semiTheming } from 'vite-plugin-semi-theming'
 
 // https://vite.dev/config/
 export default defineConfig((config: ConfigEnv): UserConfig => {
@@ -20,6 +21,9 @@ export default defineConfig((config: ConfigEnv): UserConfig => {
     },
     plugins: [
       react(),
+      semiTheming({
+        theme: '@semi-bot/semi-theme-like-notion'
+      }),
       createHtmlPlugin({
         inject: {
           data: {
