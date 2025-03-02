@@ -18,12 +18,11 @@ const AppLayout = () => {
         <AppHeader />
         <Content
           style={{
-            padding: '24px'
+            padding: '24px',
+            backgroundColor: '#fafafa'
           }}
         >
-          <div>
-            <Outlet />
-          </div>
+          <Outlet />
         </Content>
       </Layout>
     </StyledLayout>

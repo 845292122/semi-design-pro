@@ -6,7 +6,7 @@ import AuthRouter from './router/helper/authRouter'
 import './style.css'
 import { initVChartSemiTheme } from '@visactor/vchart-semi-theme'
 
-// initialization
+// initialization vchart theme
 initVChartSemiTheme()
 
 createRoot(document.getElementById('root')!).render(

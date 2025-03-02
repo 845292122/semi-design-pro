@@ -4,6 +4,7 @@ import path from 'path'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import viteCompression from 'vite-plugin-compression'
 import { semiTheming } from 'vite-plugin-semi-theming'
+import svgr from 'vite-plugin-svgr'
 
 // https://vite.dev/config/
 export default defineConfig((config: ConfigEnv): UserConfig => {
@@ -21,6 +22,7 @@ export default defineConfig((config: ConfigEnv): UserConfig => {
     },
     plugins: [
       react(),
+      svgr(),
       semiTheming({
         theme: '@semi-bot/semi-theme-like-notion'
       }),
