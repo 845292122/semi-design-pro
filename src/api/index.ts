@@ -1,10 +1,10 @@
 import { Notification } from '@douyinfe/semi-ui'
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
-import { useAtomValue } from 'jotai'
 import { authJotai } from '~/store'
+import { getDefaultStore } from 'jotai'
 
 const service = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL
+  baseURL: import.meta.env.VITE_APP_BASE_API
   // timeout: 5000,
 })
 
@@ -13,7 +13,9 @@ const service = axios.create({
  */
 service.interceptors.request.use(
   (request: InternalAxiosRequestConfig) => {
-    const token = useAtomValue(authJotai.tokenAtom)
+    const store = getDefaultStore()
+    const token = store.get(authJotai.tokenAtom)
+
     if (token) {
       request.headers['Authorization'] = token
     }
@@ -30,26 +32,15 @@ service.interceptors.request.use(
  */
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    const { code = 200, msg, data } = response.data
-
     // 文件对象直接返回
-    if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
+    if (
+      response.request.responseType === 'blob' ||
+      response.request.responseType === 'arraybuffer'
+    ) {
       return response.data
     }
 
-    /**
-     * TODO: 异常处理
-     * 1. 401
-     * 2. 403
-     * 3. !== 200
-     * 4. default(200)
-     */
-    if (code === 401) {
-    } else if (code === 403) {
-    } else if (code !== 200) {
-    } else {
-      return Promise.resolve(data)
-    }
+    return Promise.resolve(response.data)
   },
   (error: AxiosError) => {
     let { message } = error
@@ -77,3 +68,5 @@ export default service
  * 导出api模块
  */
 export * from './auth.api'
+export * from './tenant.api'
+export * from './user.api'
