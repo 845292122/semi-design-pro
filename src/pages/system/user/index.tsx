@@ -1,147 +1,82 @@
+import { IconChevronDown, IconChevronRight, IconMore } from '@douyinfe/semi-icons'
 import {
-  IconChevronDown,
-  IconChevronRight,
-  IconClear,
-  IconComment,
-  IconMore,
-  IconTickCircle
-} from '@douyinfe/semi-icons'
-import {
-  Avatar,
   Button,
   Card,
+  Col,
   Collapsible,
+  Form,
   Row,
+  SideSheet,
   Space,
   Table,
-  Tag,
   Typography
 } from '@douyinfe/semi-ui'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchForm from './SearchForm'
+import { userApi } from '~/api'
 
-const columns = [
-  {
-    title: '标题',
-    dataIndex: 'name',
-    render: (text, record, index) => {
-      return (
-        <div>
-          <Avatar
-            size="small"
-            shape="square"
-            src={record.nameIconSrc}
-            style={{ marginRight: 12 }}
-          ></Avatar>
-          {text}
-        </div>
-      )
-    }
-  },
-  {
-    title: '大小',
-    dataIndex: 'size'
-  },
-  {
-    title: '交付状态',
-    dataIndex: 'status',
-    render: text => {
-      const tagConfig = {
-        success: { color: 'green', prefixIcon: <IconTickCircle />, text: '已交付' },
-        pending: { color: 'pink', prefixIcon: <IconClear />, text: '已延期' },
-        wait: { color: 'cyan', prefixIcon: <IconComment />, text: '待评审' }
-      }
-      const tagProps = tagConfig[text]
-      return (
-        <Tag shape="circle" {...tagProps} style={{ userSelect: 'text' }}>
-          {tagProps.text}
-        </Tag>
-      )
-    }
-  },
-  {
-    title: '所有者',
-    dataIndex: 'owner',
-    render: (text, record, index) => {
-      return (
-        <div>
-          <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
-            {typeof text === 'string' && text.slice(0, 1)}
-          </Avatar>
-          {text}
-        </div>
-      )
-    }
-  },
-  {
-    title: '更新日期',
-    dataIndex: 'updateTime'
-  },
-  {
-    title: '',
-    dataIndex: 'operate',
-    render: () => {
-      return <IconMore />
-    }
+// 将 fetchUserData 定义为独立的工具函数
+const fetchUserData = async (
+  params: ApiType.Page.Param & ApiType.User.Search,
+  setLoading: (loading: boolean) => void,
+  setDataSource: (data: ApiType.User.Info[]) => void
+) => {
+  try {
+    setLoading(true)
+    await userApi.page(params)
+    // setDataSource(data?.records || []) // 假设返回的数据结构中包含 records 字段
+  } catch (err) {
+    console.error(err)
+  } finally {
+    setLoading(false)
   }
-]
-const data = [
-  {
-    key: '1',
-    name: 'Semi Design 设计稿.fig',
-    nameIconSrc:
-      'https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/figma-icon.png',
-    size: '2M',
-    owner: '姜鹏志',
-    status: 'success',
-    updateTime: '2020-02-02 05:13',
-    avatarBg: 'grey'
-  },
-  {
-    key: '2',
-    name: 'Semi Design 分享演示文稿',
-    nameIconSrc:
-      'https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/docs-icon.png',
-    size: '2M',
-    owner: '郝宣',
-    status: 'pending',
-    updateTime: '2020-01-17 05:31',
-    avatarBg: 'red'
-  },
-  {
-    key: '3',
-    name: '设计文档',
-    nameIconSrc:
-      'https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/docs-icon.png',
-    size: '34KB',
-    status: 'wait',
-    owner: 'Zoey Edwards',
-    updateTime: '2020-01-26 11:01',
-    avatarBg: 'light-blue'
-  }
-]
+}
+
+const ActionBar = (props: any) => {
+  const { handleAdd } = props
+  return (
+    <Space>
+      <Button onClick={handleAdd}>新增</Button>
+      <Button>删除</Button>
+      <Button>刷新</Button>
+    </Space>
+  )
+}
+
+const SideSheetFooter = () => {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <Button style={{ marginRight: 8 }}>重置</Button>
+      <Button theme="solid">提交</Button>
+    </div>
+  )
+}
 
 export default function User() {
   const [isOpen, setOpen] = useState<boolean>()
-  const toggle = () => {
+  const [dataSource, setDataSource] = useState<ApiType.User.Info[]>([])
+  const [loading, setLoading] = useState(false)
+  const [pageParam, setPageParam] = useState({ pageNo: 1, pageSize: 10 })
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    // fetchUserData({ ...pageParam })
+    fetchUserData({ ...pageParam }, setLoading, setDataSource)
+  }, [pageParam])
+
+  const toggleSearchBar = () => {
     setOpen(!isOpen)
   }
 
-  const ActionBar = () => {
-    return (
-      <Space>
-        <Button>新增</Button>
-        <Button>删除</Button>
-        <Button>刷新</Button>
-      </Space>
-    )
+  const handleAdd = () => {
+    setVisible(true)
   }
 
   return (
     <React.Fragment>
       <Card>
         <Typography.Text
-          onClick={toggle}
+          onClick={toggleSearchBar}
           icon={isOpen ? <IconChevronDown /> : <IconChevronRight />}
           style={{ cursor: 'pointer', userSelect: 'none' }}
           strong
@@ -172,10 +107,59 @@ export default function User() {
           }}
         >
           <Typography.Title heading={6}>用户列表</Typography.Title>
-          <ActionBar />
+          <ActionBar handleAdd={handleAdd} />
         </Row>
-        <Table columns={columns} dataSource={data} pagination={false} />
+        <Table>
+          <Table.Column title="用户名" dataIndex="username" key="username" />
+          <Table.Column title="昵称" dataIndex="nickname" key="nickname" />
+          <Table.Column title="主账号" dataIndex="isMaster" key="isMaster" />
+          <Table.Column title="邮箱" dataIndex="email" key="email" />
+          <Table.Column title="手机号" dataIndex="phone" key="phone" />
+          <Table.Column title="头像" dataIndex="avatar" key="avatar" />
+          <Table.Column title="状态" dataIndex="status" key="status" />
+          <Table.Column title="备注" dataIndex="remark" key="remark" />
+          <Table.Column title="" dataIndex="operate" key="operate" render={() => <IconMore />} />
+        </Table>
       </div>
+
+      <SideSheet
+        title="用户信息"
+        visible={visible}
+        onCancel={() => setVisible(false)}
+        footer={<SideSheetFooter />}
+      >
+        <Form style={{ padding: 10, width: '100%' }}>
+          <Form.Section text={'基本信息'}>
+            <Row gutter={24}>
+              <Col span={12}>
+                <Form.Input label="用户名" field="username" />
+              </Col>
+              <Col span={12}>
+                <Form.Input label="昵称" field="nickname" />
+              </Col>
+              <Col span={12}>
+                <Form.Input label="邮箱" field="email" />
+              </Col>
+              <Col span={12}>
+                <Form.Input label="手机号" field="phone" />
+              </Col>
+            </Row>
+          </Form.Section>
+          <Form.Section text={'其他信息'}>
+            <Row gutter={24}>
+              <Col span={24}>
+                <Form.Input label="主账号" field="isMaster" />
+              </Col>
+              <Col span={24}>
+                <Form.Input label="状态" field="status" />
+              </Col>
+              <Col span={24}>
+                <Form.Input label="备注" field="remark" />
+              </Col>
+            </Row>
+          </Form.Section>
+        </Form>
+      </SideSheet>
     </React.Fragment>
   )
 }
