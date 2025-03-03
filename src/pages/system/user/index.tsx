@@ -129,32 +129,69 @@ export default function User() {
         footer={<SideSheetFooter />}
       >
         <Form style={{ padding: 10, width: '100%' }}>
+          {/* TODO 需要 根据实际需求进行修改 */}
+          <Form.Section text={'高级信息'}>
+            <Row gutter={24}>
+              <Col span={24}>
+                <Form.Select field="tenantId" label="所属租户" style={{ width: '100%' }}>
+                  <Form.Select.Option value={1}>租户1</Form.Select.Option>
+                  <Form.Select.Option value={2}>租户2</Form.Select.Option>
+                </Form.Select>
+              </Col>
+            </Row>
+          </Form.Section>
           <Form.Section text={'基本信息'}>
             <Row gutter={24}>
               <Col span={12}>
-                <Form.Input label="用户名" field="username" />
+                <Form.Input
+                  label="用户名"
+                  field="username"
+                  rules={[{ required: true, message: '请输入用户名~' }]}
+                />
               </Col>
               <Col span={12}>
-                <Form.Input label="昵称" field="nickname" />
+                <Form.Input
+                  label="昵称"
+                  field="nickname"
+                  rules={[{ required: true, message: '请输入昵称~' }]}
+                />
               </Col>
               <Col span={12}>
                 <Form.Input label="邮箱" field="email" />
               </Col>
               <Col span={12}>
-                <Form.Input label="手机号" field="phone" />
+                <Form.Input
+                  label="手机号"
+                  field="phone"
+                  rules={[{ required: true, message: '请输入手机号~' }]}
+                />
               </Col>
             </Row>
           </Form.Section>
           <Form.Section text={'其他信息'}>
             <Row gutter={24}>
-              <Col span={24}>
-                <Form.Input label="主账号" field="isMaster" />
+              <Col span={12}>
+                <Form.RadioGroup
+                  label="主账号"
+                  field="isMaster"
+                  rules={[{ required: true, message: '请选择是否是主账号~' }]}
+                >
+                  <Form.Radio value={1}>是</Form.Radio>
+                  <Form.Radio value={0}>否</Form.Radio>
+                </Form.RadioGroup>
+              </Col>
+              <Col span={12}>
+                <Form.RadioGroup
+                  label="状态"
+                  field="status"
+                  rules={[{ required: true, message: '请选择用户状态~' }]}
+                >
+                  <Form.Radio value={1}>正常</Form.Radio>
+                  <Form.Radio value={0}>禁用</Form.Radio>
+                </Form.RadioGroup>
               </Col>
               <Col span={24}>
-                <Form.Input label="状态" field="status" />
-              </Col>
-              <Col span={24}>
-                <Form.Input label="备注" field="remark" />
+                <Form.TextArea label="备注" field="remark" />
               </Col>
             </Row>
           </Form.Section>
