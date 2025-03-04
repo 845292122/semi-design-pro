@@ -9,13 +9,14 @@ import {
   SideSheet,
   Space,
   Table,
+  Toast,
   Typography
 } from '@douyinfe/semi-ui'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import SearchForm from './SearchForm'
 import { userApi } from '~/api'
 
-// 将 fetchUserData 定义为独立的工具函数
+// TODO 将 fetchUserData 定义为独立的工具函数
 const fetchUserData = async (
   params: ApiType.Page.Param & ApiType.User.Search,
   setLoading: (loading: boolean) => void,
@@ -37,31 +38,48 @@ const ActionBar = (props: any) => {
   return (
     <Space>
       <Button onClick={handleAdd}>新增</Button>
-      <Button>删除</Button>
       <Button>刷新</Button>
     </Space>
   )
 }
 
-const SideSheetFooter = () => {
+const SideSheetFooter = ({ userFormRef, onCancel }: { userFormRef: any; onCancel: () => void }) => {
+  const handleSubmit = async () => {
+    const val = await userFormRef.current.validate()
+    if (!val) return
+    await userApi.create(val)
+    Toast.success('添加成功')
+    onCancel()
+  }
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-      <Button style={{ marginRight: 8 }}>重置</Button>
-      <Button theme="solid">提交</Button>
-    </div>
+    <Button theme="solid" onClick={handleSubmit} block>
+      提交
+    </Button>
   )
 }
 
 export default function User() {
+  const userForm = useRef<any>()
   const [isOpen, setOpen] = useState<boolean>()
   const [dataSource, setDataSource] = useState<ApiType.User.Info[]>([])
   const [loading, setLoading] = useState(false)
   const [pageParam, setPageParam] = useState({ pageNo: 1, pageSize: 10 })
   const [visible, setVisible] = useState(false)
+  const [initValues, setInitValues] = useState({})
 
   useEffect(() => {
-    // fetchUserData({ ...pageParam })
-    fetchUserData({ ...pageParam }, setLoading, setDataSource)
+    const fetchUserData = async (params: any) => {
+      try {
+        setLoading(true)
+        const data: any = await userApi.page(params)
+        setDataSource(data.records)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserData({ ...pageParam })
   }, [pageParam])
 
   const toggleSearchBar = () => {
@@ -69,6 +87,10 @@ export default function User() {
   }
 
   const handleAdd = () => {
+    setInitValues({
+      status: 1,
+      isMaster: 0
+    })
     setVisible(true)
   }
 
@@ -109,7 +131,7 @@ export default function User() {
           <Typography.Title heading={6}>用户列表</Typography.Title>
           <ActionBar handleAdd={handleAdd} />
         </Row>
-        <Table>
+        <Table dataSource={dataSource} loading={loading}>
           <Table.Column title="用户名" dataIndex="username" key="username" />
           <Table.Column title="昵称" dataIndex="nickname" key="nickname" />
           <Table.Column title="主账号" dataIndex="isMaster" key="isMaster" />
@@ -124,16 +146,26 @@ export default function User() {
 
       <SideSheet
         title="用户信息"
+        maskClosable={false}
         visible={visible}
         onCancel={() => setVisible(false)}
-        footer={<SideSheetFooter />}
+        footer={<SideSheetFooter userFormRef={userForm} onCancel={() => setVisible(false)} />}
       >
-        <Form style={{ padding: 10, width: '100%' }}>
+        <Form
+          style={{ width: '100%' }}
+          initValues={initValues}
+          getFormApi={formApi => (userForm.current = formApi)}
+        >
           {/* TODO 需要 根据实际需求进行修改 */}
           <Form.Section text={'高级信息'}>
             <Row gutter={24}>
               <Col span={24}>
-                <Form.Select field="tenantId" label="所属租户" style={{ width: '100%' }}>
+                <Form.Select
+                  field="tenantID"
+                  label="所属租户"
+                  style={{ width: '100%' }}
+                  rules={[{ required: true, message: '请选择所属租户~' }]}
+                >
                   <Form.Select.Option value={1}>租户1</Form.Select.Option>
                   <Form.Select.Option value={2}>租户2</Form.Select.Option>
                 </Form.Select>
@@ -158,13 +190,6 @@ export default function User() {
               </Col>
               <Col span={12}>
                 <Form.Input label="邮箱" field="email" />
-              </Col>
-              <Col span={12}>
-                <Form.Input
-                  label="手机号"
-                  field="phone"
-                  rules={[{ required: true, message: '请输入手机号~' }]}
-                />
               </Col>
             </Row>
           </Form.Section>

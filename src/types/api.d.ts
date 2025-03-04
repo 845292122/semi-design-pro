@@ -51,7 +51,7 @@ declare namespace ApiType {
   namespace User {
     type Info = {
       id?: number
-      tenantId?: number
+      tenantID?: number
       username?: string
       password?: string
       contact?: string
