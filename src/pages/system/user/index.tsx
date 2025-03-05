@@ -142,7 +142,13 @@ export default function User() {
             title=""
             dataIndex="operate"
             key="operate"
-            render={(_, record) => <MoreAction handleEdit={handleEdit} userId={record.id} />}
+            render={(_, record) => (
+              <MoreAction
+                handleEdit={handleEdit}
+                userId={record.id}
+                handleRefresh={handleRefresh}
+              />
+            )}
           />
         </Table>
       </div>
