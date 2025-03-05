@@ -1,4 +1,4 @@
-import { IconChevronDown, IconChevronRight, IconMore } from '@douyinfe/semi-icons'
+import { IconChevronDown, IconChevronRight } from '@douyinfe/semi-icons'
 import {
   Button,
   Card,
@@ -9,29 +9,13 @@ import {
   SideSheet,
   Space,
   Table,
-  Toast,
   Typography
 } from '@douyinfe/semi-ui'
 import React, { useEffect, useRef, useState } from 'react'
 import SearchForm from './SearchForm'
 import { userApi } from '~/api'
-
-// TODO 将 fetchUserData 定义为独立的工具函数
-const fetchUserData = async (
-  params: ApiType.Page.Param & ApiType.User.Search,
-  setLoading: (loading: boolean) => void,
-  setDataSource: (data: ApiType.User.Info[]) => void
-) => {
-  try {
-    setLoading(true)
-    await userApi.page(params)
-    // setDataSource(data?.records || []) // 假设返回的数据结构中包含 records 字段
-  } catch (err) {
-    console.error(err)
-  } finally {
-    setLoading(false)
-  }
-}
+import SideSheetFooter from './SideSheetFooter'
+import MoreAction from './MoreAction'
 
 const ActionBar = (props: any) => {
   const { handleAdd } = props
@@ -40,22 +24,6 @@ const ActionBar = (props: any) => {
       <Button onClick={handleAdd}>新增</Button>
       <Button>刷新</Button>
     </Space>
-  )
-}
-
-const SideSheetFooter = ({ userFormRef, onCancel }: { userFormRef: any; onCancel: () => void }) => {
-  const handleSubmit = async () => {
-    const val = await userFormRef.current.validate()
-    if (!val) return
-    await userApi.create(val)
-    Toast.success('添加成功')
-    onCancel()
-  }
-
-  return (
-    <Button theme="solid" onClick={handleSubmit} block>
-      提交
-    </Button>
   )
 }
 
@@ -68,17 +36,17 @@ export default function User() {
   const [visible, setVisible] = useState(false)
   const [initValues, setInitValues] = useState({})
 
-  useEffect(() => {
-    const fetchUserData = async (params: any) => {
-      try {
-        setLoading(true)
-        const data: any = await userApi.page(params)
-        setDataSource(data.records)
-      } finally {
-        setLoading(false)
-      }
+  const fetchUserData = async (params: any) => {
+    try {
+      setLoading(true)
+      const data: any = await userApi.page(params)
+      setDataSource(data.records)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchUserData({ ...pageParam })
   }, [pageParam])
 
@@ -140,16 +108,24 @@ export default function User() {
           <Table.Column title="头像" dataIndex="avatar" key="avatar" />
           <Table.Column title="状态" dataIndex="status" key="status" />
           <Table.Column title="备注" dataIndex="remark" key="remark" />
-          <Table.Column title="" dataIndex="operate" key="operate" render={() => <IconMore />} />
+          <Table.Column title="" dataIndex="operate" key="operate" render={() => <MoreAction />} />
         </Table>
       </div>
 
+      {/* 侧边栏 */}
       <SideSheet
         title="用户信息"
         maskClosable={false}
         visible={visible}
         onCancel={() => setVisible(false)}
-        footer={<SideSheetFooter userFormRef={userForm} onCancel={() => setVisible(false)} />}
+        footer={
+          <SideSheetFooter
+            userFormRef={userForm}
+            onCancel={() => setVisible(false)}
+            fetchUserData={fetchUserData}
+            fetchUserParam={{ ...pageParam }}
+          />
+        }
       >
         <Form
           style={{ width: '100%' }}
@@ -186,6 +162,13 @@ export default function User() {
                   label="昵称"
                   field="nickname"
                   rules={[{ required: true, message: '请输入昵称~' }]}
+                />
+              </Col>
+              <Col span={12}>
+                <Form.Input
+                  label="手机号"
+                  field="phone"
+                  rules={[{ required: true, message: '请输入手机号~' }]}
                 />
               </Col>
               <Col span={12}>
