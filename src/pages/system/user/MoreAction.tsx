@@ -1,5 +1,4 @@
-import { IconMore } from '@douyinfe/semi-icons'
-import { Button, Dropdown, DropdownItem, DropdownMenu, Popconfirm, Space } from '@douyinfe/semi-ui'
+import { Button, Popconfirm, Space } from '@douyinfe/semi-ui'
 import { userApi } from '~/api'
 
 export default function MoreAction(props: any) {
