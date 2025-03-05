@@ -15,8 +15,15 @@ export default function SideSheetFooter({
   const handleSubmit = async () => {
     const val = await userFormRef.current.validate()
     if (!val) return
-    await userApi.create(val)
-    Toast.success('添加成功')
+    if (val.id) {
+      // 修改
+      await userApi.modify(val)
+      Toast.success('修改成功')
+    } else {
+      // 新增
+      await userApi.create(val)
+      Toast.success('添加成功')
+    }
     onCancel()
     await fetchUserData(fetchUserParam)
   }

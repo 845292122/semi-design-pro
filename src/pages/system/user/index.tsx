@@ -64,6 +64,13 @@ export default function User() {
     setVisible(true)
   }
 
+  const handleEdit = async (userId: number) => {
+    const userInfo = await userApi.info(userId)
+    console.log(userInfo)
+    setInitValues(userInfo)
+    setVisible(true)
+  }
+
   const handleRefresh = () => {
     fetchUserData({ ...pageParam })
   }
@@ -131,7 +138,12 @@ export default function User() {
           <Table.Column title="头像" dataIndex="avatar" key="avatar" />
           <Table.Column title="状态" dataIndex="status" key="status" />
           <Table.Column title="备注" dataIndex="remark" key="remark" />
-          <Table.Column title="" dataIndex="operate" key="operate" render={() => <MoreAction />} />
+          <Table.Column
+            title=""
+            dataIndex="operate"
+            key="operate"
+            render={(_, record) => <MoreAction handleEdit={handleEdit} userId={record.id} />}
+          />
         </Table>
       </div>
 

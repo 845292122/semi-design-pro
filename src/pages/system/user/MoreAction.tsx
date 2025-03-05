@@ -1,14 +1,15 @@
 import { IconMore } from '@douyinfe/semi-icons'
 import { Button, Dropdown, DropdownItem, DropdownMenu } from '@douyinfe/semi-ui'
 
-export default function MoreAction() {
+export default function MoreAction(props: any) {
+  const { handleEdit, userId } = props
   return (
     <Dropdown
       trigger="click"
       position="bottom"
       render={
         <DropdownMenu>
-          <DropdownItem>编辑</DropdownItem>
+          <DropdownItem onClick={() => handleEdit(userId)}>编辑</DropdownItem>
           <DropdownItem>删除</DropdownItem>
         </DropdownMenu>
       }
