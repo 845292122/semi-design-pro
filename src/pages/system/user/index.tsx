@@ -18,11 +18,11 @@ import SideSheetFooter from './SideSheetFooter'
 import MoreAction from './MoreAction'
 
 const ActionBar = (props: any) => {
-  const { handleAdd } = props
+  const { handleAdd, handleRefresh } = props
   return (
     <Space>
       <Button onClick={handleAdd}>新增</Button>
-      <Button>刷新</Button>
+      <Button onClick={handleRefresh}>刷新</Button>
     </Space>
   )
 }
@@ -35,12 +35,14 @@ export default function User() {
   const [pageParam, setPageParam] = useState({ pageNo: 1, pageSize: 10 })
   const [visible, setVisible] = useState(false)
   const [initValues, setInitValues] = useState({})
+  const [recordTotal, setRecordTotal] = useState(0)
 
   const fetchUserData = async (params: any) => {
     try {
       setLoading(true)
       const data: any = await userApi.page(params)
       setDataSource(data.records)
+      setRecordTotal(data.total)
     } finally {
       setLoading(false)
     }
@@ -60,6 +62,18 @@ export default function User() {
       isMaster: 0
     })
     setVisible(true)
+  }
+
+  const handleRefresh = () => {
+    fetchUserData({ ...pageParam })
+  }
+
+  const handlePageChange = (page: any) => {
+    console.log('page', page)
+    setPageParam({
+      pageNo: page,
+      pageSize: pageParam.pageSize
+    })
   }
 
   return (
@@ -97,9 +111,18 @@ export default function User() {
           }}
         >
           <Typography.Title heading={6}>用户列表</Typography.Title>
-          <ActionBar handleAdd={handleAdd} />
+          <ActionBar handleAdd={handleAdd} handleRefresh={handleRefresh} />
         </Row>
-        <Table dataSource={dataSource} loading={loading}>
+        <Table
+          dataSource={dataSource}
+          loading={loading}
+          pagination={{
+            currentPage: pageParam.pageNo,
+            pageSize: pageParam.pageSize,
+            total: recordTotal,
+            onPageChange: handlePageChange
+          }}
+        >
           <Table.Column title="用户名" dataIndex="username" key="username" />
           <Table.Column title="昵称" dataIndex="nickname" key="nickname" />
           <Table.Column title="主账号" dataIndex="isMaster" key="isMaster" />
