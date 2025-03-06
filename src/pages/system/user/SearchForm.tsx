@@ -2,21 +2,22 @@ import { Button, Col, Form, Row, Space } from '@douyinfe/semi-ui'
 import { useRef } from 'react'
 
 export default function SearchForm(props: any) {
-  const { fetchUserData } = props
+  const { handleQuery, formChange } = props
   const queryForm: any = useRef()
-
-  const handleQuery = async () => {
-    const initPageParam = { pageNo: 1, pageSize: 10 }
-    const queryParam = queryForm.current.getValues() ?? {}
-    await fetchUserData({ ...initPageParam, ...queryParam })
-  }
 
   const handleReset = () => {
     queryForm.current.reset()
+    handleQuery()
   }
 
   return (
-    <Form style={{ padding: '10px' }} getFormApi={formApi => (queryForm.current = formApi)}>
+    <Form
+      style={{ padding: '10px' }}
+      getFormApi={formApi => (queryForm.current = formApi)}
+      onChange={({ values }) => {
+        formChange(values)
+      }}
+    >
       <Row gutter={24}>
         <Col span={6}>
           <Form.Input label="昵称" field="nickname" />

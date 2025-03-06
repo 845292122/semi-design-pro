@@ -21,7 +21,9 @@ const ActionBar = (props: any) => {
   const { handleAdd, handleRefresh } = props
   return (
     <Space>
-      <Button onClick={handleAdd}>新增</Button>
+      <Button onClick={handleAdd} theme="solid">
+        新增
+      </Button>
       <Button onClick={handleRefresh}>刷新</Button>
     </Space>
   )
@@ -33,6 +35,7 @@ export default function User() {
   const [dataSource, setDataSource] = useState<ApiType.User.Info[]>([])
   const [loading, setLoading] = useState(false)
   const [pageParam, setPageParam] = useState({ pageNo: 1, pageSize: 10 })
+  const [queryParam, setQueryParam] = useState({})
   const [visible, setVisible] = useState(false)
   const [initValues, setInitValues] = useState({})
   const [recordTotal, setRecordTotal] = useState(0)
@@ -49,11 +52,19 @@ export default function User() {
   }
 
   useEffect(() => {
-    fetchUserData({ ...pageParam })
+    fetchUserData({ ...pageParam, ...queryParam })
   }, [pageParam])
 
   const toggleSearchBar = () => {
     setOpen(!isOpen)
+  }
+
+  const formChange = (param: any) => {
+    setQueryParam(param)
+  }
+  const handleQuery = async () => {
+    setPageParam({ pageNo: 1, pageSize: 10 })
+    await fetchUserData({ ...pageParam, ...queryParam })
   }
 
   const handleAdd = () => {
@@ -72,11 +83,10 @@ export default function User() {
   }
 
   const handleRefresh = () => {
-    fetchUserData({ ...pageParam })
+    fetchUserData({ ...pageParam, ...queryParam })
   }
 
   const handlePageChange = (page: any) => {
-    console.log('page', page)
     setPageParam({
       pageNo: page,
       pageSize: pageParam.pageSize
@@ -97,7 +107,7 @@ export default function User() {
           快速搜索
         </Typography.Text>
         <Collapsible isOpen={isOpen}>
-          <SearchForm fetchUserData={fetchUserData} />
+          <SearchForm handleQuery={handleQuery} formChange={formChange} />
         </Collapsible>
       </Card>
 
