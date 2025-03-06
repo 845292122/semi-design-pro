@@ -1,4 +1,4 @@
-import { Button, Popconfirm, Space } from '@douyinfe/semi-ui'
+import { Button, Popconfirm, Space, Toast } from '@douyinfe/semi-ui'
 import { userApi } from '~/api'
 
 export default function MoreAction(props: any) {
@@ -7,6 +7,7 @@ export default function MoreAction(props: any) {
   const handleRemove = async (userId: number) => {
     await userApi.remove(userId)
     await handleRefresh()
+    Toast.success('删除成功')
   }
 
   return (

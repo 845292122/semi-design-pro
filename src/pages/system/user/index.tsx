@@ -97,7 +97,7 @@ export default function User() {
           快速搜索
         </Typography.Text>
         <Collapsible isOpen={isOpen}>
-          <SearchForm />
+          <SearchForm fetchUserData={fetchUserData} />
         </Collapsible>
       </Card>
 
