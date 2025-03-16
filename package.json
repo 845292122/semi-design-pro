@@ -17,6 +17,7 @@
     "@visactor/react-vchart": "^1.13.5",
     "@visactor/vchart-semi-theme": "^1.12.2",
     "axios": "^1.8.1",
+    "date-fns": "^4.1.0",
     "immer": "^10.1.1",
     "jotai": "^2.12.1",
     "react": "^18.3.1",

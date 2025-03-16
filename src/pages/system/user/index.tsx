@@ -1,45 +1,14 @@
-import {
-  IconChevronDown,
-  IconChevronRight,
-  IconPlusCircle,
-  IconRefresh
-} from '@douyinfe/semi-icons'
-import {
-  Button,
-  Card,
-  Col,
-  Collapsible,
-  Form,
-  Row,
-  SideSheet,
-  Space,
-  Table,
-  Tag,
-  Typography
-} from '@douyinfe/semi-ui'
+import { Col, Form, Row, Table, Tag, Toast } from '@douyinfe/semi-ui'
 import React, { useEffect, useRef, useState } from 'react'
-import SearchForm from './SearchForm'
 import { userApi } from '~/api'
-import SideSheetFooter from './SideSheetFooter'
-import MoreAction from './MoreAction'
-
-const ActionBar = (props: any) => {
-  const { handleAdd, handleRefresh } = props
-  return (
-    <Space>
-      <Button onClick={handleAdd} theme="solid" icon={<IconPlusCircle />}>
-        新增
-      </Button>
-      <Button onClick={handleRefresh} icon={<IconRefresh />}>
-        刷新
-      </Button>
-    </Space>
-  )
-}
+import SearchCard from '~/components/SearchCard'
+import DataTableCard from '~/components/DataTableCard'
+import InfoSheet from '~/components/InfoSheet'
+import SearchForm, { SearchFormItem } from '~/components/SearchForm'
+import MoreAction from '~/components/MoreAction'
 
 export default function User() {
-  const userForm = useRef<any>()
-  const [isOpen, setOpen] = useState<boolean>()
+  const userFormRef = useRef<any>()
   const [dataSource, setDataSource] = useState<UserType.Info[]>([])
   const [loading, setLoading] = useState(false)
   const [pageParam, setPageParam] = useState({ pageNo: 1, pageSize: 10 })
@@ -47,8 +16,34 @@ export default function User() {
   const [visible, setVisible] = useState(false)
   const [initValues, setInitValues] = useState({})
   const [recordTotal, setRecordTotal] = useState(0)
+  const searchColumns: SearchFormItem[] = [
+    {
+      label: '昵称',
+      field: 'nickname',
+      type: 'input'
+    },
+    {
+      label: '状态',
+      field: 'status',
+      type: 'select',
+      options: [
+        {
+          label: '正常',
+          value: 1
+        },
+        {
+          label: '禁用',
+          value: 0
+        }
+      ]
+    }
+  ]
 
-  const fetchUserData = async (params: any) => {
+  function formChange(param: any) {
+    setQueryParam(param)
+  }
+
+  async function fetchUserData(params: any) {
     try {
       setLoading(true)
       const data: any = await userApi.page(params)
@@ -59,23 +54,12 @@ export default function User() {
     }
   }
 
-  useEffect(() => {
-    fetchUserData({ ...pageParam, ...queryParam })
-  }, [pageParam])
-
-  const toggleSearchBar = () => {
-    setOpen(!isOpen)
-  }
-
-  const formChange = (param: any) => {
-    setQueryParam(param)
-  }
-  const handleQuery = async () => {
+  async function handleQuery() {
     setPageParam({ pageNo: 1, pageSize: 10 })
     await fetchUserData({ ...pageParam, ...queryParam })
   }
 
-  const handleAdd = () => {
+  async function handleAdd() {
     setInitValues({
       status: 1,
       isMaster: 0
@@ -83,62 +67,59 @@ export default function User() {
     setVisible(true)
   }
 
-  const handleEdit = async (userId: number) => {
+  async function handleEdit(userId: number) {
     const userInfo = await userApi.info(userId)
-    console.log(userInfo)
     setInitValues(userInfo)
     setVisible(true)
   }
 
-  const handleRefresh = () => {
+  function handleRefresh() {
     fetchUserData({ ...pageParam, ...queryParam })
   }
 
-  const handlePageChange = (page: any) => {
+  function handlePageChange(page: any) {
     setPageParam({
       pageNo: page,
       pageSize: pageParam.pageSize
     })
   }
 
+  async function handleSubmit() {
+    const val = await userFormRef.current.validate()
+    if (!val) return
+    if (val.id) {
+      // 修改
+      await userApi.modify(val)
+      Toast.success('修改成功')
+    } else {
+      // 新增
+      await userApi.create(val)
+      Toast.success('添加成功')
+    }
+    setVisible(false)
+    await fetchUserData({ ...pageParam })
+  }
+
+  async function handleRemove(userId: number) {
+    await userApi.remove(userId)
+    await handleRefresh()
+    Toast.success('删除成功')
+  }
+
+  useEffect(() => {
+    fetchUserData({ ...pageParam, ...queryParam })
+  }, [pageParam])
+
   return (
     <React.Fragment>
-      <Card>
-        <Typography.Text
-          onClick={toggleSearchBar}
-          icon={isOpen ? <IconChevronDown /> : <IconChevronRight />}
-          style={{ cursor: 'pointer', userSelect: 'none' }}
-          strong
-          copyable={false}
-          size="inherit"
-        >
-          快速搜索
-        </Typography.Text>
-        <Collapsible isOpen={isOpen}>
-          <SearchForm handleQuery={handleQuery} formChange={formChange} />
-        </Collapsible>
-      </Card>
-
-      <div
-        style={{
-          backgroundColor: '#fff',
-          padding: '15px 20px',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-          marginTop: '15px'
-        }}
-      >
-        <Row
-          type="flex"
-          justify="space-between"
-          style={{
-            alignItems: 'center',
-            marginBottom: '10px'
-          }}
-        >
-          <Typography.Title heading={6}>用户列表</Typography.Title>
-          <ActionBar handleAdd={handleAdd} handleRefresh={handleRefresh} />
-        </Row>
-        {/* TODO 展示内容格式化 */}
+      <SearchCard>
+        <SearchForm
+          searchColumns={searchColumns}
+          formChange={formChange}
+          handleQuery={handleQuery}
+        />
+      </SearchCard>
+      <DataTableCard handleAdd={handleAdd} handleRefresh={handleRefresh} title="用户列表">
         <Table
           dataSource={dataSource}
           loading={loading}
@@ -171,39 +152,27 @@ export default function User() {
           />
           <Table.Column title="备注" dataIndex="remark" key="remark" ellipsis={true} />
           <Table.Column
-            title=""
+            title="操作"
+            align="center"
             dataIndex="operate"
             key="operate"
             render={(_, record) => (
-              <MoreAction
-                handleEdit={handleEdit}
-                userId={record.id}
-                handleRefresh={handleRefresh}
-              />
+              <MoreAction handleEdit={handleEdit} dataId={record.id} handleRemove={handleRemove} />
             )}
           />
         </Table>
-      </div>
+      </DataTableCard>
 
-      {/* 侧边栏 */}
-      <SideSheet
+      <InfoSheet
         title="用户信息"
-        maskClosable={false}
         visible={visible}
         onCancel={() => setVisible(false)}
-        footer={
-          <SideSheetFooter
-            userFormRef={userForm}
-            onCancel={() => setVisible(false)}
-            fetchUserData={fetchUserData}
-            fetchUserParam={{ ...pageParam }}
-          />
-        }
+        onSubmit={handleSubmit}
       >
         <Form
           style={{ width: '100%' }}
           initValues={initValues}
-          getFormApi={formApi => (userForm.current = formApi)}
+          getFormApi={formApi => (userFormRef.current = formApi)}
         >
           {/* TODO 需要 根据实际需求进行修改 */}
           <Form.Section text={'高级信息'}>
@@ -270,7 +239,7 @@ export default function User() {
             </Row>
           </Form.Section>
         </Form>
-      </SideSheet>
+      </InfoSheet>
     </React.Fragment>
   )
 }

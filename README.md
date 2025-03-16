@@ -21,14 +21,14 @@ const column = []
 // 变量区域
 const [count, setCount] = useState()
 
+// 方法区域
+const handleClick = () => {}
+
 // 请求区域
 useEffect(() => {
   const fetchData = async () => {}
   fetchData()
 }, [])
-
-// 方法区域
-const handleClick = () => {}
 
 // 非请求effect区域
 useEffect(() => {}, [])
