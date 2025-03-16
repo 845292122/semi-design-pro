@@ -1,7 +1,15 @@
 import { Nav, Button, Avatar, Layout, Dropdown, Typography } from '@douyinfe/semi-ui'
-import { IconBell, IconChevronUpDown, IconExit, IconHelpCircle, IconKey, IconUserSetting } from '@douyinfe/semi-icons'
+import {
+  IconBell,
+  IconChevronUpDown,
+  IconExit,
+  IconHelpCircle,
+  IconKey,
+  IconUserSetting
+} from '@douyinfe/semi-icons'
 import styled from 'styled-components'
 import { useRouteMeta } from '~/hooks'
+import { useNavigate } from 'react-router-dom'
 
 const StyledHeader = styled(Layout.Header)`
   position: sticky;
@@ -42,6 +50,8 @@ const AppTitle = () => {
 
 // * 操作栏
 const OperationBar = () => {
+  const navigate = useNavigate()
+
   return (
     <>
       <Button
@@ -65,7 +75,14 @@ const OperationBar = () => {
         position="bottom"
         render={
           <Dropdown.Menu style={{ width: '160px' }}>
-            <Dropdown.Item icon={<IconUserSetting />}>账户信息</Dropdown.Item>
+            <Dropdown.Item
+              icon={<IconUserSetting />}
+              onClick={() => {
+                navigate('/profile')
+              }}
+            >
+              账户信息
+            </Dropdown.Item>
             <Dropdown.Item icon={<IconKey />}>修改密码</Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item type="danger" icon={<IconExit />}>
