@@ -5,6 +5,7 @@ import { authJotai } from '~/store'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { IconToken } from '@douyinfe/semi-icons-lab'
 import bizRoutes from '~/router/routes'
+import { RouteInfo } from '~/router'
 
 type NavItem = {
   itemKey: string
@@ -39,7 +40,10 @@ export default function AppSider() {
   }, [pathname])
 
   useEffect(() => {
-    const filterAndConvertRoutesByPermissions = (routes: RouteType.RouteInfo[], permissions: string[]): NavItem[] => {
+    const filterAndConvertRoutesByPermissions = (
+      routes: RouteInfo[],
+      permissions: string[]
+    ): NavItem[] => {
       return routes.flatMap(route => {
         if (route.children) {
           const filteredChildren = filterAndConvertRoutesByPermissions(route.children, permissions)
@@ -56,7 +60,8 @@ export default function AppSider() {
           return filteredChildren
         }
         if (
-          (!route.meta?.permission || (route.meta.permission && permissions.includes(route.meta.permission))) &&
+          (!route.meta?.permission ||
+            (route.meta.permission && permissions.includes(route.meta.permission))) &&
           !route.meta?.hidden
         ) {
           return [

@@ -4,8 +4,9 @@ import AppLayout from '~/layout'
 import React from 'react'
 import lazyLoad from './helper/lazyLoad'
 import { IconRadio } from '@douyinfe/semi-icons'
+import { RouteInfo } from '.'
 
-const bizRoutes: RouteType.RouteInfo[] = [
+const bizRoutes: RouteInfo[] = [
   // * 基础路由
   {
     element: <AppLayout />,
