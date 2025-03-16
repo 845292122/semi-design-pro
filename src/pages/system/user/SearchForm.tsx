@@ -1,3 +1,4 @@
+import { IconRedo, IconSearch } from '@douyinfe/semi-icons'
 import { Button, Col, Form, Row, Space } from '@douyinfe/semi-ui'
 import { useRef } from 'react'
 
@@ -31,10 +32,10 @@ export default function SearchForm(props: any) {
       </Row>
       <Row>
         <Space>
-          <Button type="primary" onClick={handleReset}>
+          <Button type="primary" onClick={handleReset} icon={<IconRedo />}>
             重置
           </Button>
-          <Button type="primary" onClick={handleQuery}>
+          <Button type="primary" onClick={handleQuery} icon={<IconSearch />}>
             查询
           </Button>
         </Space>

@@ -1,4 +1,9 @@
-import { IconChevronDown, IconChevronRight } from '@douyinfe/semi-icons'
+import {
+  IconChevronDown,
+  IconChevronRight,
+  IconPlusCircle,
+  IconRefresh
+} from '@douyinfe/semi-icons'
 import {
   Button,
   Card,
@@ -9,6 +14,7 @@ import {
   SideSheet,
   Space,
   Table,
+  Tag,
   Typography
 } from '@douyinfe/semi-ui'
 import React, { useEffect, useRef, useState } from 'react'
@@ -21,10 +27,12 @@ const ActionBar = (props: any) => {
   const { handleAdd, handleRefresh } = props
   return (
     <Space>
-      <Button onClick={handleAdd} theme="solid">
+      <Button onClick={handleAdd} theme="solid" icon={<IconPlusCircle />}>
         新增
       </Button>
-      <Button onClick={handleRefresh}>刷新</Button>
+      <Button onClick={handleRefresh} icon={<IconRefresh />}>
+        刷新
+      </Button>
     </Space>
   )
 }
@@ -32,7 +40,7 @@ const ActionBar = (props: any) => {
 export default function User() {
   const userForm = useRef<any>()
   const [isOpen, setOpen] = useState<boolean>()
-  const [dataSource, setDataSource] = useState<ApiType.User.Info[]>([])
+  const [dataSource, setDataSource] = useState<UserType.Info[]>([])
   const [loading, setLoading] = useState(false)
   const [pageParam, setPageParam] = useState({ pageNo: 1, pageSize: 10 })
   const [queryParam, setQueryParam] = useState({})
@@ -141,14 +149,27 @@ export default function User() {
             onPageChange: handlePageChange
           }}
         >
-          <Table.Column title="用户名" dataIndex="username" key="username" />
-          <Table.Column title="昵称" dataIndex="nickname" key="nickname" />
-          <Table.Column title="主账号" dataIndex="isMaster" key="isMaster" />
-          <Table.Column title="邮箱" dataIndex="email" key="email" />
+          <Table.Column title="ID" dataIndex="id" key="id" />
           <Table.Column title="手机号" dataIndex="phone" key="phone" />
-          <Table.Column title="头像" dataIndex="avatar" key="avatar" />
-          <Table.Column title="状态" dataIndex="status" key="status" />
-          <Table.Column title="备注" dataIndex="remark" key="remark" />
+          <Table.Column title="昵称" dataIndex="nickname" key="nickname" />
+          <Table.Column
+            title="主账号"
+            dataIndex="isMaster"
+            key="isMaster"
+            render={text =>
+              Number(text) === 1 ? <Tag color="light-blue"> 是 </Tag> : <Tag> 否 </Tag>
+            }
+          />
+          <Table.Column title="邮箱" dataIndex="email" key="email" />
+          <Table.Column
+            title="状态"
+            dataIndex="status"
+            key="status"
+            render={text =>
+              Number(text) === 1 ? <Tag color="green"> 正常 </Tag> : <Tag color="red"> 禁用 </Tag>
+            }
+          />
+          <Table.Column title="备注" dataIndex="remark" key="remark" ellipsis={true} />
           <Table.Column
             title=""
             dataIndex="operate"
@@ -202,13 +223,6 @@ export default function User() {
           </Form.Section>
           <Form.Section text={'基本信息'}>
             <Row gutter={24}>
-              <Col span={12}>
-                <Form.Input
-                  label="用户名"
-                  field="username"
-                  rules={[{ required: true, message: '请输入用户名~' }]}
-                />
-              </Col>
               <Col span={12}>
                 <Form.Input
                   label="昵称"

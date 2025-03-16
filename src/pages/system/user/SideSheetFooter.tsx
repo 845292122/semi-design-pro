@@ -1,3 +1,4 @@
+import { IconTick } from '@douyinfe/semi-icons'
 import { Button, Toast } from '@douyinfe/semi-ui'
 import { userApi } from '~/api'
 
@@ -29,7 +30,7 @@ export default function SideSheetFooter({
   }
 
   return (
-    <Button theme="solid" onClick={handleSubmit} block>
+    <Button theme="solid" onClick={handleSubmit} block icon={<IconTick />}>
       提交
     </Button>
   )

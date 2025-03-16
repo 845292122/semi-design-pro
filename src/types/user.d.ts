@@ -2,21 +2,24 @@ declare namespace UserType {
   type Info = {
     id?: number
     tenantID?: number
-    username?: string
-    password?: string
-    contact?: string
-    position?: string
     phone?: string
-    isTenantAdmin?: number
+    password?: string
+    nickname?: string
+    isPlatformAdmin?: number
+    isMaster?: number
+    dataScope?: number
+    email?: string
+    avatar?: string
     status?: number
+    loginIP?: string
+    loginDate?: Date
     remark?: string
-    wxId?: string
     createdAt?: Date
     updatedAt?: Date
   }
   type Search = {
-    username?: string
-    contact?: string
+    phone?: string
+    nickname?: string
     status?: number
   }
 }
