@@ -1,6 +1,6 @@
 import { Col, Form, Row, Table, Tag, Toast } from '@douyinfe/semi-ui'
 import React, { useEffect, useRef, useState } from 'react'
-import { userApi } from '~/api'
+import { tenantApi, userApi } from '~/api'
 import SearchCard from '~/components/SearchCard'
 import DataTableCard from '~/components/DataTableCard'
 import InfoSheet from '~/components/InfoSheet'
@@ -16,6 +16,8 @@ export default function User() {
   const [visible, setVisible] = useState(false)
   const [initValues, setInitValues] = useState({})
   const [recordTotal, setRecordTotal] = useState(0)
+  const [tenantList, setTenantList] = useState<Record<string, number>[]>([])
+
   const searchColumns: SearchFormItem[] = [
     {
       label: '昵称',
@@ -54,12 +56,23 @@ export default function User() {
     }
   }
 
+  async function fetchTenantList() {
+    const tenantList: any = await tenantApi.list()
+    setTenantList(
+      tenantList.map((item: { companyName: any; id: any }) => ({
+        label: item.companyName,
+        value: item.id
+      }))
+    )
+  }
+
   async function handleQuery() {
     setPageParam({ pageNo: 1, pageSize: 10 })
     await fetchUserData({ ...pageParam, ...queryParam })
   }
 
   async function handleAdd() {
+    await fetchTenantList()
     setInitValues({
       status: 1,
       isMaster: 0
@@ -68,6 +81,7 @@ export default function User() {
   }
 
   async function handleEdit(userId: number) {
+    await fetchTenantList()
     const userInfo = await userApi.info(userId)
     setInitValues(userInfo)
     setVisible(true)
@@ -123,6 +137,7 @@ export default function User() {
         <Table
           dataSource={dataSource}
           loading={loading}
+          scroll={{ x: 1000 }}
           pagination={{
             currentPage: pageParam.pageNo,
             pageSize: pageParam.pageSize,
@@ -130,32 +145,36 @@ export default function User() {
             onPageChange: handlePageChange
           }}
         >
-          <Table.Column title="ID" dataIndex="id" key="id" />
-          <Table.Column title="手机号" dataIndex="phone" key="phone" />
-          <Table.Column title="昵称" dataIndex="nickname" key="nickname" />
+          <Table.Column title="ID" dataIndex="id" key="id" width={50} fixed="left" />
+          <Table.Column title="昵称" dataIndex="nickname" key="nickname" width={100} fixed="left" />
+          <Table.Column title="手机号" dataIndex="phone" key="phone" width={150} />
           <Table.Column
             title="主账号"
             dataIndex="isMaster"
             key="isMaster"
+            width={100}
             render={text =>
               Number(text) === 1 ? <Tag color="light-blue"> 是 </Tag> : <Tag> 否 </Tag>
             }
           />
-          <Table.Column title="邮箱" dataIndex="email" key="email" />
+          <Table.Column title="邮箱" dataIndex="email" key="email" width={150} />
           <Table.Column
             title="状态"
             dataIndex="status"
             key="status"
+            width={100}
             render={text =>
               Number(text) === 1 ? <Tag color="green"> 正常 </Tag> : <Tag color="red"> 禁用 </Tag>
             }
           />
-          <Table.Column title="备注" dataIndex="remark" key="remark" ellipsis={true} />
+          <Table.Column title="备注" dataIndex="remark" key="remark" ellipsis={true} width={150} />
           <Table.Column
             title="操作"
             align="center"
             dataIndex="operate"
             key="operate"
+            fixed="right"
+            width={150}
             render={(_, record) => (
               <MoreAction handleEdit={handleEdit} dataId={record.id} handleRemove={handleRemove} />
             )}
@@ -174,7 +193,6 @@ export default function User() {
           initValues={initValues}
           getFormApi={formApi => (userFormRef.current = formApi)}
         >
-          {/* TODO 需要 根据实际需求进行修改 */}
           <Form.Section text={'高级信息'}>
             <Row gutter={24}>
               <Col span={24}>
@@ -184,8 +202,9 @@ export default function User() {
                   style={{ width: '100%' }}
                   rules={[{ required: true, message: '请选择所属租户~' }]}
                 >
-                  <Form.Select.Option value={1}>租户1</Form.Select.Option>
-                  <Form.Select.Option value={2}>租户2</Form.Select.Option>
+                  {tenantList.map(item => (
+                    <Form.Select.Option label={item.label} value={item.value} />
+                  ))}
                 </Form.Select>
               </Col>
             </Row>

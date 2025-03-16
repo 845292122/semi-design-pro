@@ -8,5 +8,6 @@ export const tenantApi = {
   remove: (id: number) => service.post(`${baseURL}/remove/${id}`),
   page: (params: CommonType.PageParam & TenantType.Search) =>
     service.get(`${baseURL}/page`, { params }),
-  info: (id: number) => service.get(`${baseURL}/info/${id}`)
+  info: (id: number) => service.get(`${baseURL}/info/${id}`),
+  list: () => service.get(`${baseURL}/list`)
 }
