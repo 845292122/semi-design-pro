@@ -8,6 +8,9 @@ import SearchCard from '~/components/SearchCard'
 import SearchForm, { SearchFormItem } from '~/components/SearchForm'
 import { extractDateRange } from '~/utils/date.util'
 import * as dateFns from 'date-fns'
+import PermModal from '~/components/PermModal'
+import { convertToTreeData, extractTitlesAndPermissions } from '~/utils/tree.util'
+import bizRoutes from '~/router/routes'
 
 export default function Tenant() {
   const infoFormRef = useRef<any>()
@@ -18,6 +21,8 @@ export default function Tenant() {
   const [dataSource, setDataSource] = useState<TenantType.Info[]>([])
   const [recordTotal, setRecordTotal] = useState(0)
   const [visible, setVisible] = useState(false)
+  const [permModalVisible, setPermModalVisible] = useState(false)
+  const [permTreeData, setPermTreeData] = useState<any[]>([])
   const searchColumns: SearchFormItem[] = [
     {
       label: '联系人',
@@ -92,6 +97,16 @@ export default function Tenant() {
     setVisible(true)
   }
 
+  function handleAssignPerm() {
+    const routeTree = extractTitlesAndPermissions(bizRoutes)
+    setPermTreeData(convertToTreeData(routeTree))
+    setPermModalVisible(true)
+  }
+
+  function cancelAssignPerm() {
+    setPermModalVisible(false)
+  }
+
   async function handleEdit(id: number) {
     const tenantInfo = await tenantApi.info(id)
     setInitValues(tenantInfo)
@@ -142,7 +157,7 @@ export default function Tenant() {
         <Table
           dataSource={dataSource}
           loading={loading}
-          scroll={{ x: 2100 }}
+          scroll={{ x: 2200 }}
           pagination={{
             currentPage: pageParam.pageNo,
             pageSize: pageParam.pageSize,
@@ -234,13 +249,18 @@ export default function Tenant() {
           />
           <Table.Column
             title="操作"
-            width="150"
+            width="250"
             fixed="right"
             align="center"
             dataIndex="operate"
             key="operate"
             render={(_, record) => (
-              <MoreAction handleEdit={handleEdit} dataId={record.id} handleRemove={handleRemove} />
+              <MoreAction
+                handleEdit={handleEdit}
+                dataId={record.id}
+                handleRemove={handleRemove}
+                handleAssignPerm={handleAssignPerm}
+              />
             )}
           />
         </Table>
@@ -331,6 +351,8 @@ export default function Tenant() {
           </Form.Section>
         </Form>
       </InfoSheet>
+
+      <PermModal visible={permModalVisible} onCancel={cancelAssignPerm} treeData={permTreeData} />
     </React.Fragment>
   )
 }

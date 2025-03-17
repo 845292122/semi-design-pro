@@ -6,6 +6,9 @@ import DataTableCard from '~/components/DataTableCard'
 import InfoSheet from '~/components/InfoSheet'
 import SearchForm, { SearchFormItem } from '~/components/SearchForm'
 import MoreAction from '~/components/MoreAction'
+import PermModal from '~/components/PermModal'
+import bizRoutes from '~/router/routes'
+import { convertToTreeData, extractTitlesAndPermissions } from '~/utils/tree.util'
 
 export default function User() {
   const userFormRef = useRef<any>()
@@ -16,6 +19,8 @@ export default function User() {
   const [visible, setVisible] = useState(false)
   const [initValues, setInitValues] = useState({})
   const [recordTotal, setRecordTotal] = useState(0)
+  const [permModalVisible, setPermModalVisible] = useState(false)
+  const [permTreeData, setPermTreeData] = useState<any[]>([])
   const [tenantList, setTenantList] = useState<Record<string, number>[]>([])
 
   const searchColumns: SearchFormItem[] = [
@@ -43,6 +48,16 @@ export default function User() {
 
   function formChange(param: any) {
     setQueryParam(param)
+  }
+
+  function handleAssignPerm() {
+    const routeTree = extractTitlesAndPermissions(bizRoutes)
+    setPermTreeData(convertToTreeData(routeTree))
+    setPermModalVisible(true)
+  }
+
+  function cancelAssignPerm() {
+    setPermModalVisible(false)
   }
 
   async function fetchUserData(params: any) {
@@ -137,7 +152,7 @@ export default function User() {
         <Table
           dataSource={dataSource}
           loading={loading}
-          scroll={{ x: 1000 }}
+          scroll={{ x: 1100 }}
           pagination={{
             currentPage: pageParam.pageNo,
             pageSize: pageParam.pageSize,
@@ -174,9 +189,14 @@ export default function User() {
             dataIndex="operate"
             key="operate"
             fixed="right"
-            width={150}
+            width={250}
             render={(_, record) => (
-              <MoreAction handleEdit={handleEdit} dataId={record.id} handleRemove={handleRemove} />
+              <MoreAction
+                handleEdit={handleEdit}
+                dataId={record.id}
+                handleRemove={handleRemove}
+                handleAssignPerm={handleAssignPerm}
+              />
             )}
           />
         </Table>
@@ -259,6 +279,8 @@ export default function User() {
           </Form.Section>
         </Form>
       </InfoSheet>
+
+      <PermModal visible={permModalVisible} onCancel={cancelAssignPerm} treeData={permTreeData} />
     </React.Fragment>
   )
 }
