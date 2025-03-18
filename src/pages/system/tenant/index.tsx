@@ -23,6 +23,8 @@ export default function Tenant() {
   const [visible, setVisible] = useState(false)
   const [permModalVisible, setPermModalVisible] = useState(false)
   const [permTreeData, setPermTreeData] = useState<any[]>([])
+  const [defaultPermTreeValue, setDefaultPermTreeValue] = useState<any[]>([])
+
   const searchColumns: SearchFormItem[] = [
     {
       label: '联系人',
@@ -352,7 +354,12 @@ export default function Tenant() {
         </Form>
       </InfoSheet>
 
-      <PermModal visible={permModalVisible} onCancel={cancelAssignPerm} treeData={permTreeData} />
+      <PermModal
+        visible={permModalVisible}
+        onCancel={cancelAssignPerm}
+        treeData={permTreeData}
+        defaultValue={defaultPermTreeValue}
+      />
     </React.Fragment>
   )
 }

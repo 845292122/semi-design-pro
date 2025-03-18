@@ -22,6 +22,7 @@ export default function User() {
   const [permModalVisible, setPermModalVisible] = useState(false)
   const [permTreeData, setPermTreeData] = useState<any[]>([])
   const [tenantList, setTenantList] = useState<Record<string, number>[]>([])
+  const [defaultPermTreeValue, setDefaultPermTreeValue] = useState<any[]>([])
 
   const searchColumns: SearchFormItem[] = [
     {
@@ -280,7 +281,12 @@ export default function User() {
         </Form>
       </InfoSheet>
 
-      <PermModal visible={permModalVisible} onCancel={cancelAssignPerm} treeData={permTreeData} />
+      <PermModal
+        visible={permModalVisible}
+        onCancel={cancelAssignPerm}
+        treeData={permTreeData}
+        defaultValue={defaultPermTreeValue}
+      />
     </React.Fragment>
   )
 }
