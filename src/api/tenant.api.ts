@@ -9,5 +9,7 @@ export const tenantApi = {
   page: (params: CommonType.PageParam & TenantType.Search) =>
     service.get(`${baseURL}/page`, { params }),
   info: (id: number) => service.get(`${baseURL}/info/${id}`),
-  list: () => service.get(`${baseURL}/list`)
+  list: () => service.get(`${baseURL}/list`),
+  perms: (id: number) => service.get(`${baseURL}/perms/${id}`),
+  assignPerms: (data: PermType.Info) => service.post(`${baseURL}/assignPerms`, data)
 }

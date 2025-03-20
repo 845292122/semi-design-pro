@@ -4,7 +4,7 @@ export type MoreActionProps = {
   handleEdit: (values: any) => void
   dataId: number
   handleRemove: (id: number) => void
-  handleAssignPerm: () => void
+  handleAssignPerm: (id: number) => void
 }
 
 export default function MoreAction(props: MoreActionProps) {
@@ -22,7 +22,7 @@ export default function MoreAction(props: MoreActionProps) {
       >
         <Button>删除</Button>
       </Popconfirm>
-      <Button onClick={() => handleAssignPerm()}>分配权限</Button>
+      <Button onClick={() => handleAssignPerm(dataId)}>分配权限</Button>
     </Space>
   )
 }

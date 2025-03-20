@@ -1,4 +1,4 @@
-import { Modal, Tree } from '@douyinfe/semi-ui'
+import { Modal, Toast, Tree } from '@douyinfe/semi-ui'
 import { useState } from 'react'
 
 export type PermModalProps = {
@@ -6,18 +6,63 @@ export type PermModalProps = {
   onCancel: () => void
   treeData: Array<any>
   defaultValue: Array<any>
+  assignPerms: (id: number, perms: string[]) => void
+  id: number | undefined
 }
 
-export default function PermModal({ visible, onCancel, treeData, defaultValue }: PermModalProps) {
-  const [selectedValue, setSelectedValue] = useState([])
+// 辅助函数：在树数据中查找节点
+const findNode = (nodes: any, key: any): any => {
+  for (const node of nodes) {
+    if (node.key === key) {
+      return node
+    }
+    if (node.children) {
+      const found = findNode(node.children, key)
+      if (found) {
+        found.parent = node
+        return found
+      }
+    }
+  }
+  return null
+}
 
-  // TODO 权限分配功能
+// TODO 选中逻辑有bug
+export default function PermModal({
+  visible,
+  onCancel,
+  treeData,
+  defaultValue,
+  assignPerms,
+  id
+}: PermModalProps) {
+  const [selectedValues, setSelectedValues] = useState<any[]>([])
+
   async function onOk() {
-    console.log(selectedValue)
+    if (!id) {
+      Toast.warning('锁定租户时出了点问题~')
+      return
+    }
+    await assignPerms(id, selectedValues)
+    Toast.success('分配权限成功')
+    onCancel()
   }
 
-  function onChange(value: any) {
-    setSelectedValue(value)
+  function onChange(values: any) {
+    const parentKeys = new Set()
+
+    // 查找所有选中节点的父节点
+    values.forEach((key: any) => {
+      const node = findNode(treeData, key)
+      let parent = node.parent
+      while (parent) {
+        parentKeys.add(parent.key)
+        parent = parent.parent
+      }
+    })
+
+    const finalCheckedKeys = new Set([...parentKeys, ...values])
+    setSelectedValues([...finalCheckedKeys])
   }
 
   return (
@@ -31,6 +76,7 @@ export default function PermModal({ visible, onCancel, treeData, defaultValue }:
       <Tree
         treeData={treeData}
         multiple
+        showLine
         defaultExpandAll
         onChange={onChange}
         autoMergeValue={false}

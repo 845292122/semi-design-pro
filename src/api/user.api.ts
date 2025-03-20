@@ -8,5 +8,7 @@ export const userApi = {
   remove: (id: number) => service.post(`${baseURL}/remove/${id}`),
   page: (params: CommonType.PageParam & UserType.Search) =>
     service.get(`${baseURL}/page`, { params }),
-  info: (id: number) => service.get(`${baseURL}/info/${id}`)
+  info: (id: number) => service.get(`${baseURL}/info/${id}`),
+  perms: (id: number) => service.get(`${baseURL}/perms/${id}`),
+  assignPerms: (data: PermType.Info) => service.post(`${baseURL}/assignPerms`, data)
 }

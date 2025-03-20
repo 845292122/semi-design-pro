@@ -24,6 +24,7 @@ export default function Tenant() {
   const [permModalVisible, setPermModalVisible] = useState(false)
   const [permTreeData, setPermTreeData] = useState<any[]>([])
   const [defaultPermTreeValue, setDefaultPermTreeValue] = useState<any[]>([])
+  const [currentTenantID, setCurrentTenantID] = useState<number | undefined>()
 
   const searchColumns: SearchFormItem[] = [
     {
@@ -99,9 +100,12 @@ export default function Tenant() {
     setVisible(true)
   }
 
-  function handleAssignPerm() {
+  async function handleAssignPerm(id: number) {
+    const perms: any = await tenantApi.perms(id)
     const routeTree = extractTitlesAndPermissions(bizRoutes)
     setPermTreeData(convertToTreeData(routeTree))
+    setCurrentTenantID(id)
+    setDefaultPermTreeValue(perms)
     setPermModalVisible(true)
   }
 
@@ -140,6 +144,13 @@ export default function Tenant() {
     }
     setVisible(false)
     await fetchUserData({ ...pageParam })
+  }
+
+  async function assignPerms(id: number, perms: string[]) {
+    await tenantApi.assignPerms({
+      id,
+      perms
+    })
   }
 
   useEffect(() => {
@@ -359,6 +370,8 @@ export default function Tenant() {
         onCancel={cancelAssignPerm}
         treeData={permTreeData}
         defaultValue={defaultPermTreeValue}
+        assignPerms={assignPerms}
+        id={currentTenantID}
       />
     </React.Fragment>
   )
