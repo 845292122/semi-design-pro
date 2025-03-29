@@ -10,24 +10,6 @@ export type PermModalProps = {
   id: number | undefined
 }
 
-// 辅助函数：在树数据中查找节点
-const findNode = (nodes: any, key: any): any => {
-  for (const node of nodes) {
-    if (node.key === key) {
-      return node
-    }
-    if (node.children) {
-      const found = findNode(node.children, key)
-      if (found) {
-        found.parent = node
-        return found
-      }
-    }
-  }
-  return null
-}
-
-// TODO 选中逻辑有bug
 export default function PermModal({
   visible,
   onCancel,
@@ -49,20 +31,7 @@ export default function PermModal({
   }
 
   function onChange(values: any) {
-    const parentKeys = new Set()
-
-    // 查找所有选中节点的父节点
-    values.forEach((key: any) => {
-      const node = findNode(treeData, key)
-      let parent = node.parent
-      while (parent) {
-        parentKeys.add(parent.key)
-        parent = parent.parent
-      }
-    })
-
-    const finalCheckedKeys = new Set([...parentKeys, ...values])
-    setSelectedValues([...finalCheckedKeys])
+    setSelectedValues(values)
   }
 
   return (
@@ -81,6 +50,7 @@ export default function PermModal({
         onChange={onChange}
         autoMergeValue={false}
         defaultValue={defaultValue}
+        directory
         style={{ width: '100%', height: '100%' }}
       />
     </Modal>

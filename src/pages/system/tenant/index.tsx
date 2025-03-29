@@ -186,7 +186,7 @@ export default function Tenant() {
             width={150}
             fixed="left"
           />
-          <Table.Column title="联系人" dataIndex="contactName" key="contactName" width={100} />
+          <Table.Column title="联系人" dataIndex="contactName" key="contactName" width={120} />
           <Table.Column title="手机号" dataIndex="contactPhone" key="contactPhone" width={150} />
           <Table.Column
             title="统一社会信用代码"
@@ -327,7 +327,7 @@ export default function Tenant() {
                 <Form.Input field="domain" label="域名" />
               </Col>
               <Col span={12}>
-                <Form.InputNumber field="userCount" label="用户数量" />
+                <Form.InputNumber field="userCount" label="用户数量" max={100} />
               </Col>
               <Col span={12}>
                 <Form.RadioGroup

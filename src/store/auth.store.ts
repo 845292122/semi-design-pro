@@ -11,9 +11,7 @@ const tokenAtom = atomWithStorage<string | undefined>('token-atom', 'undefined')
 const userInfoAtom = atomWithStorage<AuthJotai | undefined>('info-atom', undefined)
 const permissionsAtom = atomWithStorage<Array<string>>('permissions-atom', [
   'admin',
-  'system',
   'system:user',
-  'system:role',
   'system:tenant',
   'test',
   'system:test'
