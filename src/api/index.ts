@@ -17,7 +17,7 @@ service.interceptors.request.use(
     const token = store.get(authJotai.tokenAtom)
 
     if (token) {
-      request.headers['Authorization'] = token
+      request.headers['Authorization'] = 'Bearer ' + token
     }
 
     return request

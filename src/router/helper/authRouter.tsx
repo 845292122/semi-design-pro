@@ -20,6 +20,7 @@ export function findRoute(pathname: string, routes: RouteInfo[] = []): RouteInfo
 const AuthRouter = ({ children }: { children: JSX.Element }) => {
   const token = useAtomValue(authJotai.tokenAtom)
   const permissions = useAtomValue(authJotai.permissionsAtom)
+  const authInfo = useAtomValue(authJotai.infoAtom)
 
   // * 找到当前路由的 meta 信息
   const { pathname } = useLocation()
@@ -31,6 +32,10 @@ const AuthRouter = ({ children }: { children: JSX.Element }) => {
   // * 需要认证才能访问
   if (!token) {
     return <Navigate to="/login" replace />
+  }
+
+  if (authInfo?.isPlatformAdmin) {
+    return children
   }
 
   // * 需要有权限才能访问

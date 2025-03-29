@@ -9,3 +9,13 @@ declare namespace CommonType {
     total: number
   }
 }
+
+declare module 'jsencrypt' {
+  export class JSEncrypt {
+    constructor()
+    setPublicKey(pk: string): void
+    encrypt(key: string): string
+    setPrivateKey(pk: string): void
+    decrypt(key: string): string
+  }
+}
